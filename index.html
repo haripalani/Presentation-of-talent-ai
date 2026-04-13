@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-[#020202] text-white">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalentFlow AI | The Modular Sourcing Epic</title>
+    
+    <!-- Sophisticated Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Scripts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        indigo: { 400: '#818cf8', 500: '#6366f1', 600: '#4f46e5' },
+                        zinc: { 950: '#09090b' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-size: 19px; line-height: 1.7; }
+        h1, h2, h3, h4, h5 { font-family: 'Outfit', sans-serif; letter-spacing: -0.04em; }
+        
+        .noise {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; opacity: 0.03; z-index: 9999;
+            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+        }
+
+        #spotlight {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1;
+            background: radial-gradient(circle 600px at var(--x, 50%) var(--y, 50%), rgba(99, 102, 241, 0.05), transparent 100%);
+        }
+
+        .glass-panel { background: rgba(255, 255, 255, 0.015); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 1.5rem; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .glass-panel:hover { background: rgba(255, 255, 255, 0.03); border-color: rgba(99, 102, 241, 0.2); }
+
+        .reveal { opacity: 0; transform: translateY(50px); }
+
+        /* Story Nav */
+        .story-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.1); transition: all 0.3s ease; }
+        .story-dot.active { background: #6366f1; transform: scale(1.5); box-shadow: 0 0 15px rgba(99, 102, 241, 0.5); }
+
+        /* Problem/Solution Contrast */
+        .problem-tag { color: #f87171; border-color: #f8717140; background: #f8717110; }
+        .solution-tag { color: #818cf8; border-color: #818cf840; background: #818cf810; }
+
+        /* Smooth Scroll */
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+    </style>
+</head>
+<body class="overflow-x-hidden selection:bg-indigo-500/30">
+
+    <div class="noise"></div>
+    <div id="spotlight"></div>
+
+    <!-- NARRATIVE SIDE NAV -->
+    <div class="fixed left-8 top-1/2 -translate-y-1/2 z-50 hidden lg:flex flex-col gap-6 items-center">
+        <div class="h-20 w-[1px] bg-gradient-to-b from-transparent to-white/10"></div>
+        <a href="#hero" class="story-dot active" title="Start"></a>
+        <a href="#summary" class="story-dot" title="Recruitment Problem"></a>
+        <a href="#mod-sourcing" class="story-dot" title="Module: Sourcing"></a>
+        <a href="#mod-parsing" class="story-dot" title="Module: Parsing"></a>
+        <a href="#mod-scoring" class="story-dot" title="Module: Intelligence"></a>
+        <a href="#mod-realtime" class="story-dot" title="Module: Real-time"></a>
+        <a href="#status" class="story-dot" title="Readiness"></a>
+        <a href="#roadmap" class="story-dot" title="Roadmap"></a>
+        <a href="#future" class="story-dot" title="Future Resilience"></a>
+        <div class="h-20 w-[1px] bg-gradient-to-t from-transparent to-white/10"></div>
+    </div>
+
+    <!-- 1. HERO -->
+    <section id="hero" class="min-h-screen flex flex-col items-center justify-center p-10 relative">
+        <nav class="absolute top-0 w-full p-10 flex justify-between items-center pointer-events-none">
+            <div class="glass-panel px-6 py-2 pointer-events-auto backdrop-blur-md">
+                <span class="text-xs font-black tracking-widest uppercase italic">TalentFlow <span class="text-indigo-500">AI</span></span>
+            </div>
+        </nav>
+        <div class="max-w-4xl text-center reveal">
+             <span class="text-indigo-500 font-bold text-[10px] uppercase tracking-[0.6em] mb-4 block italic">Module-by-Module Breakdown</span>
+             <h1 class="text-[clamp(3.5rem,10vw,9rem)] font-extrabold leading-[0.85] tracking-tighter mb-10">
+                The Anatomy of <span class="text-white/40 italic">Elite</span> Sourcing.
+             </h1>
+             <p class="text-xl md:text-2xl text-zinc-400 max-w-3xl mx-auto leading-relaxed font-medium">
+                Solving the deepest problems in recruitment through modular intelligence.
+             </p>
+        </div>
+    </section>
+
+    <!-- 2. THE PROBLEM SUMMARY -->
+    <section id="summary" class="min-h-screen py-40 px-10 flex items-center justify-center bg-zinc-950/20">
+        <div class="max-w-5xl w-full reveal text-center">
+            <span class="problem-tag px-4 py-1.5 rounded-full border text-[10px] font-bold uppercase tracking-widest mb-8 inline-block">The Executive Pain</span>
+            <h2 class="text-5xl md:text-7xl font-extrabold mb-10 tracking-tighter">Information isn't <br/><span class="text-zinc-600">Intelligence.</span></h2>
+            <p class="text-xl md:text-2xl text-zinc-400 max-w-3xl mx-auto leading-relaxed">
+                Recruiters are currently losing <strong>70% of their operational capacity</strong> to manual search, anti-bot blocks, unstructured data, and refresh lag. Recruitment as we know it is a bottleneck for growth. 
+            </p>
+        </div>
+    </section>
+
+    <!-- MODULE 1: SOURCING -->
+    <section id="mod-sourcing" class="min-h-screen py-32 px-10 relative border-t border-white/5">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-baseline gap-4 mb-20 reveal">
+                <h3 class="text-6xl md:text-8xl font-black italic text-white/5">01</h3>
+                <h3 class="text-4xl md:text-6xl font-extrabold uppercase tracking-tighter underline underline-offset-8 decoration-indigo-500">Sourcing Module</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 h-full items-stretch reveal">
+                <!-- Souring: Problem -->
+                <div class="glass-panel p-12 flex flex-col border-red-500/10">
+                    <span class="problem-tag px-3 py-1 rounded-full border text-[9px] font-bold uppercase tracking-widest self-start mb-8">The Problem: Anti-Bot Scaling</span>
+                    <h4 class="text-3xl font-bold mb-6 italic">The Flagging Wall</h4>
+                    <p class="text-zinc-400 leading-relaxed mb-10">
+                        Major platforms (LinkedIn, Naukri) use aggressive <strong>WAF (Web Application Firewalls)</strong> like Cloudflare to block non-human activity. Recruiters hitting search limits and bot-flagging triggers cause talent conduits to collapse instantly.
+                    </p>
+                    <div class="mt-auto p-6 bg-red-500/5 border border-red-500/10 rounded-2xl">
+                         <div class="text-[10px] font-mono text-red-400/60 uppercase mb-2">Platform Response:</div>
+                         <div class="text-xs font-bold text-red-500">403 Forbidden: Abnormal Traffic Detected</div>
+                    </div>
+                </div>
+
+                <!-- Sourcing: Solution -->
+                <div class="glass-panel p-12 flex flex-col bg-indigo-500/5 border-indigo-500/30">
+                    <span class="solution-tag px-3 py-1 rounded-full border text-[9px] font-bold uppercase tracking-widest self-start mb-8">The Solution: Stealth Sourcing</span>
+                    <h4 class="text-3xl font-bold mb-6 italic">The StealthClient Protocol</h4>
+                    <div class="space-y-6 text-zinc-300 mb-10 text-sm">
+                        <p>Our `StealthClient` (located in `backend-ai/sourcing/stealth.py`) uses a 4-layered defense:</p>
+                        <ul class="space-y-3">
+                            <li class="flex gap-3"><i class="fas fa-check text-indigo-500 mt-1"></i> <strong>IP/Proxy Rotation:</strong> Origin masking via high-anonymity server 31.59.20.176.</li>
+                            <li class="flex gap-3"><i class="fas fa-check text-indigo-500 mt-1"></i> <strong>Human Jitter:</strong> Random delays (500ms - 2500ms) that mimic human research rhythms.</li>
+                            <li class="flex gap-3"><i class="fas fa-check text-indigo-500 mt-1"></i> <strong>Target Shifting:</strong> Using Google/DuckDuckGo X-Ray as a shield for top-tier platforms.</li>
+                        </ul>
+                    </div>
+                    <div class="mt-auto p-6 bg-black/40 border border-indigo-500/20 rounded-2xl">
+                         <div class="text-[10px] font-mono text-indigo-400 uppercase mb-2">Stealth Status:</div>
+                         <div class="text-xs font-bold text-green-500">Identity Masked | Sec-Fetch Active</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODULE 2: PARSING -->
+    <section id="mod-parsing" class="min-h-screen py-32 px-10 relative bg-zinc-950/40">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-baseline gap-4 mb-20 reveal">
+                <h3 class="text-6xl md:text-8xl font-black italic text-white/5">02</h3>
+                <h3 class="text-4xl md:text-6xl font-extrabold uppercase tracking-tighter underline underline-offset-8 decoration-indigo-500">Parsing Module</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch reveal">
+                <!-- Parsing: Problem -->
+                <div class="glass-panel p-12 flex flex-col border-red-500/10">
+                    <span class="problem-tag px-3 py-1 rounded-full border text-[9px] font-bold uppercase tracking-widest self-start mb-8">The Problem: Unstructured Noise</span>
+                    <h4 class="text-3xl font-bold mb-6 italic">The Translation Gap</h4>
+                    <p class="text-zinc-400 leading-relaxed mb-10">
+                        90% of candidate data is unstructured—messy bios, fragmented careers, and obscured contact info. Normal scrapers fail to "understand" the nuances of a career story, leading to biased or missing data. 
+                    </p>
+                    <div class="mt-auto py-8 text-center text-zinc-700 bg-black/40 border border-white/5 rounded-2xl">
+                         <i class="fas fa-file-circle-xmark text-4xl mb-4"></i>
+                         <div class="text-[10px] uppercase font-bold tracking-widest italic">Data Quality: Fragmented</div>
+                    </div>
+                </div>
+
+                <!-- Parsing: Solution -->
+                <div class="glass-panel p-12 flex flex-col bg-indigo-500/5 border-indigo-500/30">
+                    <span class="solution-tag px-3 py-1 rounded-full border text-[9px] font-bold uppercase tracking-widest self-start mb-8">The Solution: Deep Translation</span>
+                    <h4 class="text-3xl font-bold mb-6 italic">Dual-Check AI Decoder</h4>
+                    <p class="text-zinc-400 text-sm mb-8 leading-relaxed">We use a <strong>Double Vision</strong> system that ensures 100% precision on every data point.</p>
+                    <div class="grid grid-cols-2 gap-4 mb-10">
+                         <div class="p-4 bg-black/40 rounded-xl border border-white/5">
+                              <h5 class="text-[10px] font-bold text-indigo-400 mb-2 uppercase">AI Intuition</h5>
+                              <p class="text-[11px] text-zinc-500">Gemini-Pro interprets career summaries like a human.</p>
+                         </div>
+                         <div class="p-4 bg-black/40 rounded-xl border border-white/5">
+                              <h5 class="text-[10px] font-bold text-indigo-400 mb-2 uppercase">Literal Scanning</h5>
+                              <p class="text-[11px] text-zinc-500">Regex engines pull obscured Emails/Phones with 100% accuracy.</p>
+                         </div>
+                    </div>
+                    <div class="mt-auto grid grid-cols-3 gap-2">
+                         <span class="px-3 py-1 bg-white/5 rounded text-[10px] text-zinc-500">EXPERIENCE MAP</span>
+                         <span class="px-3 py-1 bg-white/5 rounded text-[10px] text-zinc-500">CONTACT MINER</span>
+                         <span class="px-3 py-1 bg-white/5 rounded text-[10px] text-zinc-500">SKILL MATRIX</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODULE 3: SCORING -->
+    <section id="mod-scoring" class="min-h-screen py-32 px-10 relative border-t border-white/5">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-baseline gap-4 mb-20 reveal">
+                <h3 class="text-6xl md:text-8xl font-black italic text-white/5">03</h3>
+                <h3 class="text-4xl md:text-6xl font-extrabold uppercase tracking-tighter underline underline-offset-8 decoration-indigo-500">Intelligence Module</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch reveal">
+                <!-- Scoring: Problem -->
+                <div class="glass-panel p-12 flex flex-col border-red-500/10">
+                    <span class="problem-tag px-3 py-1 rounded-full border text-[9px] font-bold uppercase tracking-widest self-start mb-8">The Problem: Keyword Blindness</span>
+                    <h4 class="text-3xl font-bold mb-6 italic">The Search Paradox</h4>
+                    <p class="text-zinc-400 leading-relaxed mb-10">
+                        Traditional search only finds *words*. If you need a "Problem Solver," keywords fail. This <strong>"Keyword Wall"</strong> misses the best talent who didn't use the exact right phrasing on their profile.
+                    </p>
+                    <div class="mt-auto p-4 bg-red-500/5 border border-red-500/10 rounded-xl font-mono text-xs text-red-400">
+                         { "matches": 0, "reason": "Keyword 'Problem Solver' not found" }
+                    </div>
+                </div>
+
+                <!-- Scoring: Solution -->
+                <div class="glass-panel p-12 flex flex-col bg-indigo-500/5 border-indigo-500/30 relative overflow-hidden">
+                    <span class="solution-tag px-3 py-1 rounded-full border text-[9px] font-bold uppercase tracking-widest self-start mb-8">The Solution: Intent Matching</span>
+                    <h4 class="text-3xl font-bold mb-6 italic">3D Semantic Vector Mapping</h4>
+                    <p class="text-zinc-400 text-sm leading-relaxed mb-10">
+                        Instead of reading words, we convert candidates into a <strong>768-dimensional mathematical map</strong>. This allows us to calculate the distance between your Job Description and the candidate's career intent.
+                    </p>
+                    <div class="mt-auto glass-panel p-6 border-indigo-500/20">
+                         <h5 class="text-[10px] font-bold text-indigo-400 mb-4 uppercase tracking-[0.2em]">The Brain's Formula</h5>
+                         <div class="flex justify-between items-center">
+                              <span class="text-xs text-zinc-500">Skill Distance</span>
+                              <span class="text-xs font-mono text-indigo-300">Similarity: 0.94</span>
+                         </div>
+                         <div class="h-1.5 w-full bg-white/5 rounded-full mt-4 overflow-hidden">
+                              <div class="h-full bg-indigo-500 w-[94%]"></div>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODULE 4: REAL-TIME -->
+    <section id="mod-realtime" class="min-h-screen py-32 px-10 relative bg-zinc-950/40">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-baseline gap-4 mb-20 reveal">
+                <h3 class="text-6xl md:text-8xl font-black italic text-white/5">04</h3>
+                <h3 class="text-4xl md:text-6xl font-extrabold uppercase tracking-tighter underline underline-offset-8 decoration-indigo-500">Real-time Module</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch reveal">
+                <!-- Real-time: Problem -->
+                <div class="glass-panel p-12 flex flex-col border-red-500/10">
+                    <span class="problem-tag px-3 py-1 rounded-full border text-[9px] font-bold uppercase tracking-widest self-start mb-8">The Problem: Stale Dashboard Lag</span>
+                    <h4 class="text-3xl font-bold mb-6 italic">The Manual Refresh</h4>
+                    <p class="text-zinc-400 leading-relaxed mb-10">
+                        HR Dashboards are typically static. If our scout finds a perfect candidate at 10:00 AM, the recruiter often doesn't see it until they manually refresh at 2:00 PM. That <strong>4-hour lag</strong> is enough for the talent to be moved to another interview.
+                    </p>
+                    <div class="mt-auto h-20 flex items-center justify-center opacity-20">
+                         <i class="fas fa-rotate text-5xl animate-spin-slow"></i>
+                    </div>
+                </div>
+
+                <!-- Real-time: Solution -->
+                <div class="glass-panel p-12 flex flex-col bg-indigo-500/5 border-indigo-500/30">
+                    <span class="solution-tag px-3 py-1 rounded-full border text-[9px] font-bold uppercase tracking-widest self-start mb-8">The Solution: Instant Pulse</span>
+                    <h4 class="text-3xl font-bold mb-6 italic">WebSocket Nervous System</h4>
+                    <p class="text-zinc-300 text-sm leading-relaxed mb-10">
+                        We don't wait for refreshes. Our backend maintains a <strong>live socket connection</strong> to your browser. The millisecond the Invisible Scout finds a profile, a pulse is sent to your screen.
+                    </p>
+                    <div class="mt-auto p-6 glass-panel border-indigo-500/20">
+                         <div class="flex justify-between items-center mb-4">
+                              <span class="text-[10px] uppercase font-bold text-zinc-400">Live WebSockets</span>
+                              <span class="text-[10px] font-mono text-green-500 uppercase">Connected</span>
+                         </div>
+                         <div class="text-[11px] font-mono text-zinc-600">> Scout found: Software Lead @ Bangalore</div>
+                         <div class="text-[11px] font-mono text-indigo-400 animate-pulse">> Pushing update to UI... Success.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION: READINESS -->
+    <section id="status" class="py-40 px-10 bg-zinc-950 text-center reveal">
+         <h2 class="text-6xl md:text-8xl font-black mb-10 tracking-tighter">Readiness <span class="text-indigo-500 italic">Matrix.</span></h2>
+         
+         <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mt-20 reveal">
+             <div class="glass-panel p-12 hover:border-indigo-500/20 transition-all">
+                  <div class="flex justify-between items-center mb-10">
+                       <h4 class="text-xl font-bold italic underline underline-offset-8 decoration-indigo-500">Core API & Infra</h4>
+                       <span class="text-indigo-400 font-mono text-sm font-black italic">78% READY</span>
+                  </div>
+                  <p class="text-zinc-500 text-sm leading-relaxed mb-6">Built on a solid Node/Express foundation. Core orchestration and WebSocket hooks are stable; currently awaiting broad-scale stress testing.</p>
+                  <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                       <div class="h-full bg-indigo-500 w-[78%]"></div>
+                  </div>
+             </div>
+             <div class="glass-panel p-12 bg-indigo-500/5 border-indigo-500/10 hover:border-indigo-500/30 transition-all">
+                  <div class="flex justify-between items-center mb-10">
+                       <h4 class="text-xl font-bold italic underline underline-offset-8 decoration-indigo-500">Intelligence & Matching</h4>
+                       <span class="text-indigo-400 font-mono text-sm font-black italic">65% READY</span>
+                  </div>
+                  <p class="text-zinc-400 text-sm leading-relaxed mb-6">Semantic 3D mapping is functional for core tech roles. Currently refining the Brain's ability to handle non-traditional and complex career paths.</p>
+                  <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                       <div class="h-full bg-indigo-500 w-[65%]"></div>
+                  </div>
+             </div>
+             <div class="glass-panel p-12 border-dashed hover:border-solid hover:bg-white/5 transition-all">
+                  <div class="flex justify-between items-center mb-10">
+                       <h4 class="text-xl font-bold italic underline underline-offset-8 decoration-indigo-500">Sourcing & Stealth</h4>
+                       <span class="text-indigo-400 font-mono text-sm font-black italic">45% READY</span>
+                  </div>
+                  <p class="text-zinc-500 text-sm leading-relaxed mb-6 italic">Initial probes for LinkedIn and Naukri are working. We are now in a phase of intensive "Stealth" hardening to ensure long-term resilience.</p>
+                  <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                       <div class="h-full bg-indigo-500 w-[45%]"></div>
+                  </div>
+             </div>
+         </div>
+
+         <!-- OVERALL READINESS -->
+         <div class="mt-32 max-w-2xl mx-auto reveal glass-panel p-12 border-indigo-500/40 bg-indigo-500/10 text-left">
+              <div class="flex justify-between items-center mb-6">
+                   <h4 class="text-xs font-bold uppercase tracking-[0.4em]">Total Ecosystem Readiness</h4>
+                   <span class="text-3xl font-black italic tracking-tighter">63%</span>
+              </div>
+              <div class="h-4 w-full bg-white/5 rounded-full overflow-hidden">
+                   <div class="h-full bg-indigo-500 w-[63%] shadow-[0_0_20px_rgba(99,102,241,0.5)]"></div>
+              </div>
+              <p class="text-center text-[10px] uppercase font-bold text-indigo-400 mt-8 tracking-widest italic animate-pulse">
+                  Ecosystem is currently in "Beta / Hardening" phase.
+              </p>
+         </div>
+    </section>
+
+    <!-- SECTION: ROADMAP MATRIX -->
+    <section id="roadmap" class="py-40 px-10 border-t border-white/5 bg-zinc-950/20">
+        <div class="max-w-7xl mx-auto">
+             <div class="mb-24 reveal text-center">
+                  <span class="text-indigo-500 font-bold text-xs uppercase tracking-[0.4em] mb-4 block">Execution Plan</span>
+                  <h2 class="text-5xl md:text-8xl font-black mb-8 italic tracking-tighter">The TalentFlow <span class="text-indigo-500">Roadmap.</span></h2>
+                  <p class="text-zinc-500 text-lg">From foundational architecture to global technical dominance.</p>
+             </div>
+
+             <!-- THE ROADMAP MATRIX -->
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 reveal items-stretch">
+                  <div class="glass-panel p-10 border-indigo-500/10">
+                       <div class="flex items-center gap-3 mb-10 text-green-500">
+                            <i class="fas fa-check-circle"></i>
+                            <span class="text-[10px] font-bold uppercase tracking-widest">Completed milestones</span>
+                       </div>
+                       <ul class="space-y-6 text-sm">
+                            <li class="flex gap-4">01 <h5 class="font-bold underline italic">Core API</h5></li>
+                            <li class="flex gap-4">02 <h5 class="font-bold underline italic">X-Ray Scouting</h5></li>
+                            <li class="flex gap-4">03 <h5 class="font-bold underline italic">3D Vector Memory</h5></li>
+                       </ul>
+                  </div>
+                  <div class="glass-panel p-10 bg-indigo-500/5 border-indigo-500/20">
+                       <div class="flex items-center gap-3 mb-10 text-indigo-400">
+                            <i class="fas fa-spinner animate-spin"></i>
+                            <span class="text-[10px] font-bold uppercase tracking-widest">Active development</span>
+                       </div>
+                       <ul class="space-y-6 text-sm">
+                            <li class="flex gap-4">04 <h5 class="font-bold underline italic">Automated Outreach</h5></li>
+                            <li class="flex gap-4">05 <h5 class="font-bold underline italic">EntryGate Screening</h5></li>
+                            <li class="flex gap-4">06 <h5 class="font-bold underline italic">Stealth Hardening</h5></li>
+                       </ul>
+                  </div>
+                  <div class="glass-panel p-10 border-dashed">
+                       <div class="flex items-center gap-3 mb-10 text-zinc-500">
+                            <i class="fas fa-plus-circle"></i>
+                            <span class="text-[10px] font-bold uppercase tracking-widest">New / Proposed</span>
+                       </div>
+                       <ul class="space-y-6 text-sm">
+                            <li class="flex gap-4">07 <h5 class="font-bold underline italic">AI Voice Interviews</h5></li>
+                            <li class="flex gap-4">08 <h5 class="font-bold underline italic">Global ATS Connect</h5></li>
+                            <li class="flex gap-4">09 <h5 class="font-bold underline italic">Ghost Mode Sourcing</h5></li>
+                       </ul>
+                  </div>
+             </div>
+        </div>
+    </section>
+
+    <!-- SECTION: FUTURE RESILIENCE -->
+    <section id="future" class="py-40 px-10 relative overflow-hidden bg-[#020202]">
+        <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-indigo-500/5 blur-[180px] rounded-full -mr-40 -mt-40 pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto relative z-10">
+             <div class="mb-32 reveal">
+                  <span class="text-indigo-500 font-bold text-xs uppercase tracking-[0.4em] mb-4 block underline decoration-2 underline-offset-8">Resilience Analysis</span>
+                  <h2 class="text-5xl md:text-8xl font-black mb-10 tracking-tighter italic">The 2026 <br/><span class="text-indigo-500">Blueprint.</span></h2>
+                  <p class="text-2xl text-zinc-400 max-w-2xl leading-relaxed font-medium">
+                      As AI recruitment matures, new hurdles will emerge. Here is how TalentFlow stays <strong>invincible.</strong>
+                  </p>
+             </div>
+
+             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 reveal">
+                 
+                 <!-- Challenge 1: UBA -->
+                 <div class="glass-panel p-12 border-indigo-500/10 hover:border-indigo-500/40 transition-all flex flex-col">
+                      <div class="flex items-center gap-5 mb-8">
+                           <div class="w-16 h-16 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center">
+                                <i class="fas fa-shield-virus text-red-500/60 text-2xl"></i>
+                           </div>
+                           <h4 class="text-xl font-bold italic tracking-tight uppercase">Anti-Bot (UBA)</h4>
+                      </div>
+                      <p class="text-sm text-zinc-500 mb-8 leading-relaxed italic border-l-2 border-white/10 pl-6">Platforms are moving to User Behavior Analytics (UBA)—monitoring non-linear mouse paths, scroll inertia, and micro-interactions.</p>
+                      <div class="mt-auto p-6 bg-indigo-500/5 border border-indigo-500/10 rounded-2xl">
+                           <h5 class="text-[10px] font-bold uppercase text-indigo-400 mb-4 tracking-widest">Mitigation: Cursor Synthesis</h5>
+                           <ul class="text-[11px] text-zinc-400 space-y-3 font-medium">
+                                <li class="flex gap-2"><i class="fas fa-microchip text-indigo-500/40 text-[8px] mt-1"></i> Bezier-curve path synthesis for human-like cursor drift.</li>
+                                <li class="flex gap-2"><i class="fas fa-microchip text-indigo-500/40 text-[8px] mt-1"></i> Randomized dwell-time injection on interactive nodes.</li>
+                                <li class="flex gap-2"><i class="fas fa-microchip text-indigo-500/40 text-[8px] mt-1"></i> Viewport-specific scroll physics (Inertia/Bounce).</li>
+                           </ul>
+                      </div>
+                 </div>
+
+                 <!-- Challenge 2: Deepfakes -->
+                 <div class="glass-panel p-12 border-indigo-500/10 hover:border-indigo-500/40 transition-all flex flex-col">
+                      <div class="flex items-center gap-5 mb-8">
+                           <div class="w-16 h-16 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
+                                <i class="fas fa-mask text-indigo-400 text-2xl"></i>
+                           </div>
+                           <h4 class="text-xl font-bold italic tracking-tight uppercase">Interview Fraud</h4>
+                      </div>
+                      <p class="text-sm text-zinc-500 mb-8 leading-relaxed italic border-l-2 border-white/10 pl-6">Real-time deepfake video and voice impersonation during remote technical vetting sessions.</p>
+                      <div class="mt-auto p-6 bg-indigo-500/5 border border-indigo-500/10 rounded-2xl">
+                           <h5 class="text-[10px] font-bold uppercase text-indigo-400 mb-4 tracking-widest">Mitigation: Biometric Gates</h5>
+                           <ul class="text-[11px] text-zinc-400 space-y-3 font-medium">
+                                <li class="flex gap-2"><i class="fas fa-microchip text-indigo-500/40 text-[8px] mt-1"></i> FFT (Fast Fourier Transform) analysis for voice-sync lag.</li>
+                                <li class="flex gap-2"><i class="fas fa-microchip text-indigo-500/40 text-[8px] mt-1"></i> Adversarial liveness prompts (Unpredictable movements).</li>
+                                <li class="flex gap-2"><i class="fas fa-microchip text-indigo-500/40 text-[8px] mt-1"></i> Multi-frame forensic artifact detection (Deepfake jitter).</li>
+                           </ul>
+                      </div>
+                 </div>
+
+                 <!-- Challenge 3: Compliance -->
+                 <div class="glass-panel p-12 border-indigo-500/10 hover:border-indigo-500/40 transition-all flex flex-col">
+                      <div class="flex items-center gap-5 mb-8">
+                           <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+                                <i class="fas fa-gavel text-white/40 text-2xl"></i>
+                           </div>
+                           <h4 class="text-xl font-bold italic tracking-tight uppercase">AI Explainability</h4>
+                      </div>
+                      <p class="text-sm text-zinc-500 mb-8 leading-relaxed italic border-l-2 border-white/10 pl-6">EU AI Act and GDPR requirements for ranking justification and meaningful human intervention.</p>
+                      <div class="mt-auto p-6 bg-indigo-500/5 border border-indigo-500/10 rounded-2xl">
+                           <h5 class="text-[10px] font-bold uppercase text-indigo-400 mb-4 tracking-widest">Mitigation: Rationale Engine</h5>
+                           <ul class="text-[11px] text-zinc-400 space-y-3 font-medium">
+                                <li class="flex gap-2"><i class="fas fa-microchip text-indigo-500/40 text-[8px] mt-1"></i> LIME/SHAP integration for feature-impact reporting.</li>
+                                <li class="flex gap-2"><i class="fas fa-microchip text-indigo-500/40 text-[8px] mt-1"></i> Direct mapping of scores to specific CV evidence.</li>
+                                <li class="flex gap-2"><i class="fas fa-microchip text-indigo-500/40 text-[8px] mt-1"></i> Human-in-the-loop override audit trails.</li>
+                           </ul>
+                      </div>
+                 </div>
+
+                 <!-- Challenge 4: AI Slop -->
+                 <div class="glass-panel p-12 border-indigo-500/10 hover:border-indigo-500/40 transition-all flex flex-col">
+                      <div class="flex items-center gap-5 mb-8">
+                           <div class="w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+                                <i class="fas fa-trash-can text-zinc-600 text-2xl"></i>
+                           </div>
+                           <h4 class="text-xl font-bold italic tracking-tight uppercase">Resume "Slop"</h4>
+                      </div>
+                      <p class="text-sm text-zinc-500 mb-8 leading-relaxed italic border-l-2 border-white/10 pl-6">Mass-produced AI resumes and generic job-board content optimized purely for ATS keyword matching.</p>
+                      <div class="mt-auto p-6 bg-indigo-500/5 border border-indigo-500/10 rounded-2xl">
+                           <h5 class="text-[10px] font-bold uppercase text-indigo-400 mb-4 tracking-widest">Mitigation: Substance-First</h5>
+                           <ul class="text-[11px] text-zinc-400 space-y-3 font-medium">
+                                <li class="flex gap-2"><i class="fas fa-microchip text-indigo-500/40 text-[8px] mt-1"></i> Cross-platform drift detection (LinkedIn vs. CV).</li>
+                                <li class="flex gap-2"><i class="fas fa-microchip text-indigo-500/40 text-[8px] mt-1"></i> Scoring for unique role-specific accomplishments.</li>
+                                <li class="flex gap-2"><i class="fas fa-microchip text-indigo-500/40 text-[8px] mt-1"></i> AI Hallucination filtering during extraction.</li>
+                           </ul>
+                      </div>
+                 </div>
+
+                 <!-- Challenge 5: Semantic Drift -->
+                 <div class="glass-panel p-12 border-indigo-500/10 hover:border-indigo-500/40 transition-all flex flex-col">
+                      <div class="flex items-center gap-5 mb-8">
+                           <div class="w-16 h-16 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
+                                <i class="fas fa-diagram-project text-indigo-300 text-2xl"></i>
+                           </div>
+                           <h4 class="text-xl font-bold italic tracking-tight uppercase">Semantic Drift</h4>
+                      </div>
+                      <p class="text-sm text-zinc-500 mb-8 leading-relaxed italic border-l-2 border-white/10 pl-6">Rapid market shifts leading to emerging vocational centroids and unconventional role cross-pollination.</p>
+                      <div class="mt-auto p-6 bg-indigo-500/5 border border-indigo-500/10 rounded-2xl">
+                           <h5 class="text-[10px] font-bold uppercase text-indigo-400 mb-4 tracking-widest">Mitigation: Self-Healing Graphs</h5>
+                           <ul class="text-[11px] text-zinc-400 space-y-3 font-medium">
+                                <li class="flex gap-2"><i class="fas fa-microchip text-indigo-500/40 text-[8px] mt-1"></i> Dynamic expansion of talent ontology via live data.</li>
+                                <li class="flex gap-2"><i class="fas fa-microchip text-indigo-500/40 text-[8px] mt-1"></i> Vector-space clustering for zero-day role titles.</li>
+                                <li class="flex gap-2"><i class="fas fa-microchip text-indigo-500/40 text-[8px] mt-1"></i> Latent skill relationship mapping.</li>
+                           </ul>
+                      </div>
+                 </div>
+
+                 <!-- Challenge 6: Decentralized ID -->
+                 <div class="glass-panel p-12 border-indigo-500/10 hover:border-indigo-500/40 transition-all flex flex-col">
+                      <div class="flex items-center gap-5 mb-8">
+                           <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+                                <i class="fas fa-link text-white/20 text-2xl"></i>
+                           </div>
+                           <h4 class="text-xl font-bold italic tracking-tight uppercase">Talent Identity</h4>
+                      </div>
+                      <p class="text-sm text-zinc-500 mb-8 leading-relaxed italic border-l-2 border-white/10 pl-6">Candidates shifting toward platform-independent, portable professional identities and decentralized portfolios.</p>
+                      <div class="mt-auto p-6 bg-indigo-500/5 border border-indigo-500/10 rounded-2xl">
+                           <h5 class="text-[10px] font-bold uppercase text-indigo-400 mb-4 tracking-widest">Mitigation: Trusted ID Sync</h5>
+                           <ul class="text-[11px] text-zinc-400 space-y-3 font-medium">
+                                <li class="flex gap-2"><i class="fas fa-microchip text-indigo-500/40 text-[8px] mt-1"></i> W3C-compliant DID (Decentralized Identifier) resolution.</li>
+                                <li class="flex gap-2"><i class="fas fa-microchip text-indigo-500/40 text-[8px] mt-1"></i> Polyglot credential verification (Web3 + Github).</li>
+                                <li class="flex gap-2"><i class="fas fa-microchip text-indigo-500/40 text-[8px] mt-1"></i> Zero-Knowledge Proofs for degree/salary vetting.</li>
+                           </ul>
+                      </div>
+                 </div>
+
+             </div>
+        </div>
+    </section>
+
+    <footer class="py-20 text-center relative border-t border-white/5 mx-10 opacity-30">
+        <div class="text-[10px] font-mono text-zinc-700 uppercase tracking-[0.8em] font-bold">TalentFlow AI Ecosystem</div>
+    </footer>
+
+    <script>
+        const lenis = new Lenis();
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+        window.addEventListener('mousemove', (e) => {
+            const spotlight = document.getElementById('spotlight');
+            spotlight.style.setProperty('--x', e.clientX + 'px');
+            spotlight.style.setProperty('--y', e.clientY + 'px');
+        });
+
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.utils.toArray('.reveal').forEach((el) => {
+            gsap.to(el, { opacity: 1, y: 0, duration: 1.5, ease: "power4.out", scrollTrigger: { trigger: el, start: "top 92%" } });
+        });
+
+        const sections = document.querySelectorAll('section');
+        const dots = document.querySelectorAll('.story-dot');
+        window.addEventListener('scroll', () => {
+            let current = "";
+            sections.forEach(section => {
+                if (window.pageYOffset >= section.offsetTop - 300) { current = section.getAttribute('id'); }
+            });
+            dots.forEach(dot => {
+                dot.classList.remove('active');
+                if (dot.getAttribute('href').includes(current)) { dot.classList.add('active'); }
+            });
+        });
+    </script>
+</body>
+</html>
